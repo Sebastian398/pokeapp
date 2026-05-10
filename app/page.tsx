@@ -1,65 +1,123 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { Collection } from "@/types/collection";
+import Link from "next/link";
+import { FaStar, FaRegStar, FaCheckCircle } from "react-icons/fa";
+
+interface PokemonListItem {
+  name: string;
+  url: string;
+}
 
 export default function Home() {
+  const [collection, setCollection] = useState<Collection>({
+    captured: {},
+    favorites: {},
+  });
+  const [list, setList] = useState<PokemonListItem[]>([]);
+
+  useEffect(() => {
+    async function load() {
+      const resList = await fetch("https://pokeapi.co/api/v2/pokemon?limit=2000");
+      const dataList = await resList.json();
+      setList(dataList.results);
+
+      const resCol = await fetch("/api/collection");
+      const col = await resCol.json();
+      setCollection(col);
+    }
+    load();
+  }, []);
+
+  async function toggleCaptured(id: string, current: boolean) {
+    const res = await fetch("/api/collection", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, captured: !current }),
+    });
+    const updated = await res.json();
+    setCollection(updated);
+  }
+
+  async function toggleFavorite(id: string, current: boolean) {
+    const res = await fetch("/api/collection", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, favorite: !current }),
+    });
+    const updated = await res.json();
+    setCollection(updated);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 p-6">
+      <h1 className="text-4xl font-extrabold text-center mb-10 text-black tracking-wide">
+        Mi Pokédex
+      </h1>
+
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        {list.map((item) => {
+          const id = item.url.split("/").at(-2)!;
+          const isCaptured = !!collection.captured[id];
+          const isFavorite = !!collection.favorites[id];
+
+          return (
+            <li
+              key={item.name}
+              className="bg-white rounded-xl shadow-lg p-4 text-center border hover:border-blue-400 hover:shadow-xl transition-transform transform hover:scale-105"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              {/* Card con Link */}
+              <Link href={`/pokemon/${id}`} className="block cursor-pointer">
+                <div>
+                  <div className="text-xs text-gray-500 mb-2">#{id}</div>
+                  <img
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
+                    alt={item.name}
+                    className="w-20 h-20 mx-auto mb-2"
+                  />
+                  <p className="font-semibold text-lg capitalize text-black">{item.name}</p>
+                </div>
+              </Link>
+
+              {/* Botones con stopPropagation */}
+              <div className="flex justify-center gap-4 mt-3">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCaptured(id, isCaptured);
+                  }}
+                  className="text-green-600 hover:text-green-700"
+                >
+                  <FaCheckCircle
+                    className={`w-6 h-6 ${isCaptured ? "fill-current" : "opacity-30"}`}
+                  />
+                </button>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(id, isFavorite);
+                  }}
+                  className="text-yellow-500 hover:text-yellow-600"
+                >
+                  {isFavorite ? (
+                    <FaStar className="w-6 h-6 fill-current" />
+                  ) : (
+                    <FaRegStar className="w-6 h-6" />
+                  )}
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="mt-12 text-center">
+        <Link href="/pokemon/daily"
+          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">
+          Ver Pokémon del día
+        </Link>
+      </div>
+    </main>
   );
 }
