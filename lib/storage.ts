@@ -1,29 +1,47 @@
+// lib/storage.ts
+import fs from "fs";
+import path from "path";
+
 export type Collection = {
   captured: Record<string, boolean>;
   favorites: Record<string, boolean>;
 };
 
-export function getCollection(): Collection {
-  if (typeof window === "undefined") {
-    // SSR: devolver colección vacía
+const filePath = path.join(process.cwd(), "data", "collection.json");
+
+function readFile(): Collection {
+  try {
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch {
     return { captured: {}, favorites: {} };
   }
-  const saved = localStorage.getItem("pokeapp_collection");
-  return saved ? JSON.parse(saved) : { captured: {}, favorites: {} };
+}
+
+function writeFile(collection: Collection) {
+  fs.writeFileSync(filePath, JSON.stringify(collection, null, 2), "utf-8");
+}
+
+export function getCollection(): Collection {
+  return readFile();
 }
 
 export function setCaptured(id: string, captured: boolean) {
-  if (typeof window === "undefined") return;
-  const col = getCollection();
-  col.captured[id] = captured;
-  if (!captured) delete col.captured[id];
-  localStorage.setItem("pokeapp_collection", JSON.stringify(col));
+  const col = readFile();
+  if (captured) {
+    col.captured[id] = true;
+  } else {
+    delete col.captured[id];
+  }
+  writeFile(col);
 }
 
 export function setFavorite(id: string, favorite: boolean) {
-  if (typeof window === "undefined") return;
-  const col = getCollection();
-  col.favorites[id] = favorite;
-  if (!favorite) delete col.favorites[id];
-  localStorage.setItem("pokeapp_collection", JSON.stringify(col));
+  const col = readFile();
+  if (favorite) {
+    col.favorites[id] = true;
+  } else {
+    delete col.favorites[id];
+  }
+  writeFile(col);
 }
