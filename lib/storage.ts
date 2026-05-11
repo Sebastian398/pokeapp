@@ -5,6 +5,10 @@ import path from "path";
 export type Collection = {
   captured: Record<string, boolean>;
   favorites: Record<string, boolean>;
+  daily?: {
+    id: string;
+    date: string; // formato YYYY-MM-DD
+  };
 };
 
 const filePath = path.join(process.cwd(), "data", "collection.json");

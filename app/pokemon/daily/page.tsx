@@ -28,7 +28,7 @@ export default async function DailyPokemonPage() {
           className="w-32 h-32 mx-auto mb-4"
         />
 
-        <p className="text-xl font-bold capitalize text-black">
+        <p className="text-xl font-bold capitalize">
           {pokemon.name} #{pokemon.id}
         </p>
 
