@@ -1,11 +1,22 @@
 // src/app/pokemon/[id]/page.tsx
 import { fetchPokemon } from "@/lib/pokeapi";
 import { Collection } from "@/types/collection";
+import { Pokemon } from "@/types/pokemon";
 
 export default async function PokemonDetail(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
 
-  const pokemon = await fetchPokemon(id);
+  const pokemon: Pokemon = await fetchPokemon(id);
+  
+  // descripción desde species
+  const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+  const species = await resSpecies.json();
+  const descriptionEntry = species.flavor_text_entries.find(
+    (entry: { language: { name: string } }) => entry.language.name === "es"
+  );
+  const description = descriptionEntry
+    ? descriptionEntry.flavor_text.replace(/\n|\f/g, " ")
+    : "Sin descripción disponible";
 
   let collection: Collection;
   try {
@@ -34,7 +45,40 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
           alt={pokemon.name}
           className="w-40 h-40 mx-auto mb-6"
         />
-        {/* Aquí ya puedes mostrar tipos, stats, etc. */}
+        {/* Descripción */}
+        <p className="text-gray-700 italic mb-6">{description}</p>
+        
+        {/* Stats */}
+        <div className="mb-6">
+          <h2 className="font-semibold text-lg mb-2 text-black">Estadísticas</h2>
+          <ul>
+            {pokemon.stats.map((s) => (
+              <li key={s.stat.name} className="text-sm capitalize mb-1 text-black">
+                {s.stat.name.replace("-", " ")}: {s.base_stat}
+                <div className="w-full bg-gray-200 rounded h-2 mt-1">
+                  <div
+                    className="bg-blue-500 h-2 rounded"
+                    style={{ width: `${s.base_stat / 2}%` }}
+                  ></div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* Movimientos */}
+        <div className="mb-6">
+          <h2 className="font-semibold text-lg mb-2 text-black">Movimientos</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+            {pokemon.moves.slice(0, 20).map((m) => (
+              <span
+                key={m.move.name}
+                className="text-xs bg-gray-100 px-2 py-1 rounded capitalize text-black"
+              >
+                {m.move.name.replace("-", " ")}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );

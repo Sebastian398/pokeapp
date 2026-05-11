@@ -1,4 +1,3 @@
-/* // src/app/pokemon/daily/page.tsx
 import { fetchPokemon } from "@/lib/pokeapi";
 import { getDailyPokemonId } from "@/lib/daily-pokemon";
 
@@ -43,4 +42,3 @@ export default async function DailyPokemonPage() {
     </div>
   );
 }
- */
