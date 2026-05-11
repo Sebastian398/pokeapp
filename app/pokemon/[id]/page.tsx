@@ -1,7 +1,8 @@
 // src/app/pokemon/[id]/page.tsx
 import { fetchPokemon } from "@/lib/pokeapi";
 import { Collection } from "@/types/collection";
-import { Pokemon } from "@/types/pokemon";
+import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
+import { JSX } from "react";
 
 export default async function PokemonDetail(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -21,7 +22,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   const typeRelations = await Promise.all(
     pokemon.types.map(async (t) => {
       const resType = await fetch(t.type.url);
-      return resType.json();
+      return resType.json() as Promise<TypeResponse>;
     })
   );
   const combinedRelations = {
@@ -30,13 +31,13 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
     no_damage_from: new Set<string>(),
   };
   typeRelations.forEach((rel) => {
-    rel.damage_relations.double_damage_from.forEach((d: any) =>
+    rel.damage_relations.double_damage_from.forEach((d) =>
       combinedRelations.double_damage_from.add(d.name)
     );
-    rel.damage_relations.half_damage_from.forEach((d: any) =>
+    rel.damage_relations.half_damage_from.forEach((d) =>
       combinedRelations.half_damage_from.add(d.name)
     );
-    rel.damage_relations.no_damage_from.forEach((d: any) =>
+    rel.damage_relations.no_damage_from.forEach((d) =>
       combinedRelations.no_damage_from.add(d.name)
     );
   });
@@ -194,7 +195,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   );
 }
 
-function renderChain(node: any): JSX.Element {
+function renderChain(node: EvolutionNode): JSX.Element {
   return (
     <div className="flex items-center gap-6">
       {/* Pokémon actual */}
@@ -208,7 +209,7 @@ function renderChain(node: any): JSX.Element {
       </div>
 
       {/* Evoluciones */}
-      {node.evolves_to.length > 0 && node.evolves_to.map((next: any) => (
+      {node.evolves_to.length > 0 && node.evolves_to.map((next: EvolutionNode) => (
         <div key={next.species.name} className="flex items-center gap-6">
           <div className="flex flex-col items-center">
             <span className="text-4xl text-blue-900">➡️</span>
