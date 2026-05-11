@@ -123,8 +123,8 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
                 </div>
                 <div className="w-full bg-gray-200 rounded h-3 mt-1">
                   <div
-                    className={`h-3 rounded ${getStatColor(s.stat.name)}`}
-                    style={{ width: `${Math.min(s.base_stat, 150) / 1.5}%` }}
+                    className={`h-3 rounded ${getStatColorByValue(s.base_stat)}`}
+                    style={{ width: `${Math.min(s.base_stat, 200) / 2}%` }}
                   ></div>
                 </div>
               </li>
@@ -139,7 +139,9 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
             <table className="min-w-full border border-gray-300 text-sm">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="px-2 py-1 text-left text-black">Movimientos por nivel</th>
+                  <th className="px-2 py-1 text-left text-black">Movimiento</th>
+                  <th className="px-2 py-1 text-left text-black">Método</th>
+                  <th className="px-2 py-1 text-left text-black">Nivel</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,6 +149,12 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
                   <tr key={m.move.name} className="odd:bg-white even:bg-gray-50">
                     <td className="px-2 py-1 capitalize text-black">
                       {m.move.name.replace("-", " ")}
+                    </td>
+                    <td className="px-2 py-1 text-black">
+                      {m.version_group_details[0]?.move_learn_method.name || "—"}
+                    </td>
+                    <td className="px-2 py-1 text-black">
+                      {m.version_group_details[0]?.level_learned_at || "—"}
                     </td>
                   </tr>
                 ))}
@@ -188,27 +196,45 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
 
 function renderChain(node: any): JSX.Element {
   return (
-    <>
-      <span className="capitalize font-bold text-black">{node.species.name}</span>
-      {node.evolves_to.length > 0 && (
-        <>
-          <span className="text-blue-900">→</span>
-          {node.evolves_to.map((next: any) => (
-            <div key={next.species.name} className="flex items-center gap-2">
-              <span className="capitalize font-bold text-black">{next.species.name}</span>
-              {next.evolution_details[0]?.min_level && (
-                <span className="text-xs text-green-600">
-                  (Nivel {next.evolution_details[0].min_level})
-                </span>
-              )}
-              {renderChain(next)}
-            </div>
-          ))}
-        </>
-      )}
-    </>
+    <div className="flex items-center gap-6">
+      {/* Pokémon actual */}
+      <div className="flex flex-col items-center">
+        <img
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractId(node.species.url)}.png`}
+          alt={node.species.name}
+          className="w-24 h-24"
+        />
+        <span className="capitalize font-bold text-black">{node.species.name}</span>
+      </div>
+
+      {/* Evoluciones */}
+      {node.evolves_to.length > 0 && node.evolves_to.map((next: any) => (
+        <div key={next.species.name} className="flex items-center gap-6">
+          <div className="flex flex-col items-center">
+            <span className="text-4xl text-blue-900">➡️</span>
+            {next.evolution_details[0] && (
+              <span className="text-xs text-green-600">
+                {next.evolution_details[0].min_level
+                  ? `Nivel ${next.evolution_details[0].min_level}`
+                  : next.evolution_details[0].trigger?.name
+                  ? `Por ${next.evolution_details[0].trigger.name}`
+                  : ""}
+              </span>
+            )}
+          </div>
+          {renderChain(next)}
+        </div>
+      ))}
+    </div>
   );
 }
+
+// Helper para extraer el ID del URL de species
+function extractId(url: string): string {
+  const parts = url.split("/");
+  return parts[parts.length - 2];
+}
+
 
 // Colores dinámicos para tipos
 function getTypeColor(type: string): string {
@@ -222,13 +248,10 @@ function getTypeColor(type: string): string {
   return colors[type] || "gray";
 }
 
-// Colores dinámicos para stats
-function getStatColor(stat: string): string {
-  if (stat.includes("hp")) return "bg-red-500";
-  if (stat.includes("attack")) return "bg-orange-500";
-  if (stat.includes("defense")) return "bg-yellow-500";
-  if (stat.includes("special-attack")) return "bg-purple-500";
-  if (stat.includes("special-defense")) return "bg-green-500";
-  if (stat.includes("speed")) return "bg-blue-500";
-  return "bg-gray-500";
+function getStatColorByValue(value: number): string {
+  if (value < 40) return "bg-red-500";       // Muy bajo
+  if (value < 60) return "bg-orange-500";    // Bajo
+  if (value < 80) return "bg-yellow-500";    // Medio
+  if (value < 100) return "bg-blue-500";     // Bueno
+  return "bg-green-500";                     // Excelente
 }
