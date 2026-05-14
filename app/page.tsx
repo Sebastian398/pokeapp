@@ -90,7 +90,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 p-6">
-      <h1 className="text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+      <h1 className="text-6xl font-extrabold text-center mb-10 bg-gradient-to-b from-red-600 to-white bg-clip-text text-transparent drop-shadow-lg [text-shadow:2px_2px_0_black]">
         Mi Pokédex
       </h1>
 
