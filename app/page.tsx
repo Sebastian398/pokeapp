@@ -16,12 +16,15 @@ export default function Home() {
     favorites: {},
   });
   const [list, setList] = useState<PokemonListItem[]>([]);
+  const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function load() {
-      const resList = await fetch("https://pokeapi.co/api/v2/pokemon?limit=2000");
+      const resList = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1900");
       const dataList = await resList.json();
       setList(dataList.results);
+      setFiltered(dataList.results);
 
       const resCol = await fetch("/api/collection");
       const col = await resCol.json();
@@ -50,14 +53,49 @@ export default function Home() {
     setCollection(updated);
   }
 
+  //Filtrado
+  function handleFilter(type: "all" | "captured" | "favorites") {
+    if (type === "captured") {
+      setFiltered(list.filter((item) => {
+        const id = item.url.split("/").at(-2)!;
+        return collection.captured[id];
+      }));
+
+    } else if (type === "favorites") {
+      setFiltered(list.filter((item) => {
+        const id = item.url.split("/").at(-2)!;
+        return collection.favorites[id];
+      }));
+    } else {
+      setFiltered(list);
+    }
+  }
+
+  //pokemon del día
+  function handleDaily() {
+    window.location.href = "/pokemon/daily";
+  }
+
+  //Búsqueda
+  function handleSearch(query: string) {
+    setSearch(query);
+    if (!query) {
+      setFiltered(list);
+      return;
+    }
+    setFiltered(
+      list.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 p-6">
-      <h1 className="text-4xl font-extrabold text-center mb-10 text-black tracking-wide">
+      <h1 className="text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
         Mi Pokédex
       </h1>
 
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-        {list.map((item) => {
+        {filtered.map((item) => {
           const id = item.url.split("/").at(-2)!;
           const isCaptured = !!collection.captured[id];
           const isFavorite = !!collection.favorites[id];
@@ -112,11 +150,48 @@ export default function Home() {
           );
         })}
       </ul>
-      <div className="mt-12 text-center">
-        <Link href="/pokemon/daily"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">
-          Ver Pokémon del día
-        </Link>
+
+      {/* Botón flotante con menú */}
+      <div className="fixed bottom-6 right-6">
+        <button
+          onClick={() => {
+            const menu = document.getElementById("floating-menu");
+            if (menu) menu.classList.toggle("hidden");
+          }}
+          className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700"
+        >
+          ☰
+        </button>
+
+        <div id="floating-menu" className="hidden bg-white shadow-lg rounded-lg p-4 mt-2 w-56">
+          <button
+            onClick={() => handleFilter("captured")}
+            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+          >
+            Mostrar atrapados
+          </button>
+          <button
+            onClick={() => handleFilter("favorites")}
+            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+          >
+            Mostrar favoritos
+          </button>
+          <button
+            onClick={handleDaily}
+            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+          >
+            Pokémon del día
+          </button>
+          <div className="mt-2" >
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Buscar por nombre..."
+              className="w-full border rounded px-2 py-1 text-sm"
+            />
+          </div>
+        </div>
       </div>
     </main>
   );
