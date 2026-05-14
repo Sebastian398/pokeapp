@@ -163,7 +163,7 @@ export default function Home() {
           ☰
         </button>
 
-        <div id="floating-menu" className="hidden bg-white shadow-lg rounded-lg p-4 mt-2 w-56">
+        <div id="floating-menu" className="hidden bg-white shadow-lg rounded-lg p-4 mt-2 w-56 border-blue-600 border">
           <button
             onClick={() => handleFilter("captured")}
             className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
@@ -188,7 +188,7 @@ export default function Home() {
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Buscar por nombre..."
-              className="w-full border rounded px-2 py-1 text-sm"
+              className="w-full border rounded px-2 py-1 text-sm placeholder-black text-black"
             />
           </div>
         </div>
