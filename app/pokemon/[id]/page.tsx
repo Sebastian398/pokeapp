@@ -13,8 +13,12 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   // descripción de species
   const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
   const species = await resSpecies.json();
-  const descriptionEntry = species.flavor_text_entries.find(
+  const descriptionEntry =
+  species.flavor_text_entries.find(
     (entry: { language: { name: string } }) => entry.language.name === "es"
+  ) ||
+  species.flavor_text_entries.find(
+    (entry: { language: { name: string } }) => entry.language.name === "en"
   );
   const description = descriptionEntry
     ? descriptionEntry.flavor_text.replace(/\n|\f/g, " ")
@@ -48,13 +52,19 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   const resChain = await fetch(species.evolution_chain.url);
   const chain = await resChain.json();
 
-  let collection: Collection;
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/collection`);
-    collection = await res.json();
-  } catch {
-    collection = { captured: {}, favorites: {} };
-  }
+  const movesDetailed = await Promise.all(
+  pokemon.moves.slice(0, 20).map(async (m) => {
+    const resMove = await fetch(m.move.url);
+    const moveData = await resMove.json();
+    return {
+      name: m.move.name,
+      method: m.version_group_details[0]?.move_learn_method.name || "—",
+      level: m.version_group_details[0]?.level_learned_at || "—",
+      power: moveData.power || "—",
+      category: moveData.damage_class?.name || "—",
+    };
+  })
+);
 
   return (
     <main className="min-h-screen bg-gray-50 p-4">
@@ -136,20 +146,18 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
                   <th className="px-2 py-1 text-left text-black">Movimiento</th>
                   <th className="px-2 py-1 text-left text-black">Método</th>
                   <th className="px-2 py-1 text-left text-black">Nivel</th>
+                  <th className="px-2 py-1 text-left text-black">Potencia</th>
+                  <th className="px-2 py-1 text-left text-black">Categoría</th>
                 </tr>
               </thead>
               <tbody>
-                {pokemon.moves.slice(0, 20).map((m) => (
-                  <tr key={m.move.name} className="odd:bg-white even:bg-gray-50">
-                    <td className="px-2 py-1 capitalize text-black">
-                      {m.move.name.replace("-", " ")}
-                    </td>
-                    <td className="px-2 py-1 text-black">
-                      {m.version_group_details[0]?.move_learn_method.name || "—"}
-                    </td>
-                    <td className="px-2 py-1 text-black">
-                      {m.version_group_details[0]?.level_learned_at || "—"}
-                    </td>
+                {movesDetailed.map((m) => (
+                  <tr key={m.name} className="odd:bg-white even:bg-gray-50">
+                    <td className="px-2 py-1 capitalize text-black">{m.name.replace("-", " ")}</td>
+                    <td className="px-2 py-1 text-black">{m.method}</td>
+                    <td className="px-2 py-1 text-black">{m.level}</td>
+                    <td className="px-2 py-1 text-black">{m.power}</td>
+                    <td className="px-2 py-1 capitalize text-black">{m.category}</td>
                   </tr>
                 ))}
               </tbody>
