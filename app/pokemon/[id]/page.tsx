@@ -4,6 +4,7 @@ import { Collection } from "@/types/collection";
 import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
 import AbilityList from "./AbilityList";
 import { JSX } from "react";
+import Link from "next/link";
 
 export default async function PokemonDetail(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -187,24 +188,29 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   );
 }
 
+
 function renderChain(node: EvolutionNode): JSX.Element {
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-4 flex-wrap">
       {/* Pokémon actual */}
-      <div className="flex flex-col items-center">
-        <img
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractId(node.species.url)}.png`}
-          alt={node.species.name}
-          className="w-16 h-16 sm:w-20 sm:h-20 max-w-[70px] max-h-[70px] object-contain"
-        />
-        <span className="capitalize font-bold text-black">{node.species.name}</span>
+      <div className="flex flex-col items-center max-w-[90px]">
+        <Link href={`/pokemon/${extractId(node.species.url)}`}>
+          <img
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractId(node.species.url)}.png`}
+            alt={node.species.name}
+            className="w-16 h-16 sm:w-20 sm:h-20 object-contain hover:scale-105 transition-transform"
+          />
+          <span className="capitalize font-bold text-black text-sm">
+            {node.species.name}
+          </span>
+        </Link>
       </div>
 
       {/* Evoluciones */}
       {node.evolves_to.length > 0 && node.evolves_to.map((next: EvolutionNode) => (
-        <div key={next.species.name} className="flex items-center gap-6 text-s">
+        <div key={next.species.name} className="flex items-center gap-4 flex-wrap">
           <div className="flex flex-col items-center">
-            <span className="text-4xl text-blue-900">→</span>
+            <span className="text-2xl text-blue-900">→</span>
             {next.evolution_details[0] && (
               <span className="text-xs text-green-600">
                 {next.evolution_details[0].min_level
