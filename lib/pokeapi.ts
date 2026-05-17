@@ -19,7 +19,7 @@ export async function fetchPokemonList(offset = 0): Promise<PokemonList> {
 }
 
 export async function fetchPokemon(idOrName: string): Promise<Pokemon> {
-  // ✅ Corrección: si llega vacío, devolvemos un error más claro
+  // Corrección: si llega vacío, devolvemos un error más claro
   if (!idOrName || idOrName.trim() === "") {
     return Promise.reject("ID o nombre de Pokémon vacío");
   }

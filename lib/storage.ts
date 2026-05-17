@@ -1,31 +1,51 @@
-import { Redis } from "@upstash/redis";
+// lib/storage.ts
+import fs from "fs";
+import path from "path";
 
 export type Collection = {
   captured: Record<string, boolean>;
   favorites: Record<string, boolean>;
-  daily?: { id: string; date: string };
+  daily?: {
+    id: string;
+    date: string; // formato YYYY-MM-DD
+  };
 };
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
+const filePath = path.join(process.cwd(), "data", "collection.json");
 
-export async function getCollection(): Promise<Collection> {
-  const data = await redis.get("pokeapp_collection");
-  return (data as Collection) || { captured: {}, favorites: {} };
+function readFile(): Collection {
+  try {
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    return { captured: {}, favorites: {} };
+  }
 }
 
-export async function setCaptured(id: string, captured: boolean) {
-  const col = await getCollection();
-  col.captured[id] = captured;
-  if (!captured) delete col.captured[id];
-  await redis.set("pokeapp_collection", col);
+function writeFile(collection: Collection) {
+  fs.writeFileSync(filePath, JSON.stringify(collection, null, 2), "utf-8");
 }
 
-export async function setFavorite(id: string, favorite: boolean) {
-  const col = await getCollection();
-  col.favorites[id] = favorite;
-  if (!favorite) delete col.favorites[id];
-  await redis.set("pokeapp_collection", col);
+export function getCollection(): Collection {
+  return readFile();
+}
+
+export function setCaptured(id: string, captured: boolean) {
+  const col = readFile();
+  if (captured) {
+    col.captured[id] = true;
+  } else {
+    delete col.captured[id];
+  }
+  writeFile(col);
+}
+
+export function setFavorite(id: string, favorite: boolean) {
+  const col = readFile();
+  if (favorite) {
+    col.favorites[id] = true;
+  } else {
+    delete col.favorites[id];
+  }
+  writeFile(col);
 }

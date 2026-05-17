@@ -18,6 +18,7 @@ export default function Home() {
   const [list, setList] = useState<PokemonListItem[]>([]);
   const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
   const [search, setSearch] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -53,14 +54,12 @@ export default function Home() {
     setCollection(updated);
   }
 
-  //Filtrado
   function handleFilter(type: "all" | "captured" | "favorites") {
     if (type === "captured") {
       setFiltered(list.filter((item) => {
         const id = item.url.split("/").at(-2)!;
         return collection.captured[id];
       }));
-
     } else if (type === "favorites") {
       setFiltered(list.filter((item) => {
         const id = item.url.split("/").at(-2)!;
@@ -71,12 +70,10 @@ export default function Home() {
     }
   }
 
-  //pokemon del día
   function handleDaily() {
     window.location.href = "/pokemon/daily";
   }
 
-  //Búsqueda
   function handleSearch(query: string) {
     setSearch(query);
     if (!query) {
@@ -89,11 +86,34 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 p-6">
-      <h1 className="text-6xl font-extrabold text-center mb-10 bg-gradient-to-b from-red-600 to-white bg-clip-text text-transparent drop-shadow-lg [text-shadow:2px_2px_0_black]">
+    <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-100 to-gray-200 text-black"} min-h-screen p-6`}>
+      
+      {/* Título estilo Pokébola con variación en modo oscuro */}
+      <h1 className={`text-6xl font-extrabold text-center mb-6 
+        ${darkMode 
+          ? "bg-gradient-to-b from-white to-gray-300 [text-shadow:2px_2px_0_black]" 
+          : "bg-gradient-to-b from-red-600 to-white [text-shadow:2px_2px_0_black]"} 
+        bg-clip-text text-transparent drop-shadow-lg`}>
         Mi Pokédex
       </h1>
 
+      {/* Estadísticas */}
+      <div className="flex justify-center gap-10 mb-8">
+        <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
+          <p className="text-xl font-bold text-red-600">Atrapados</p>
+          <p className={`${darkMode ? "text-black" : "text-black"} text-2xl`}>
+            {Object.keys(collection.captured).length}
+          </p>
+        </div>
+        <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
+          <p className="text-xl font-bold text-yellow-500">Favoritos</p>
+          <p className={`${darkMode ? "text-black" : "text-black"} text-2xl`}>
+            {Object.keys(collection.favorites).length}
+          </p>
+        </div>
+      </div>
+
+      {/* Lista de Pokémon */}
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {filtered.map((item) => {
           const id = item.url.split("/").at(-2)!;
@@ -103,9 +123,9 @@ export default function Home() {
           return (
             <li
               key={item.name}
-              className="bg-white rounded-xl shadow-lg p-4 text-center border hover:border-blue-400 hover:shadow-xl transition-transform transform hover:scale-105"
+              className={`rounded-xl shadow-lg p-4 text-center border transition-transform transform hover:scale-105 
+                ${darkMode ? "bg-gray-800 border-gray-700 hover:border-blue-400" : "bg-white hover:border-blue-400 hover:shadow-xl"}`}
             >
-              {/* Card con Link */}
               <Link href={`/pokemon/${id}`} className="block cursor-pointer">
                 <div>
                   <div className="text-xs text-gray-500 mb-2">#{id}</div>
@@ -113,12 +133,12 @@ export default function Home() {
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
                     alt={item.name}
                     className="w-20 h-20 mx-auto mb-2"
+                    loading="lazy"
                   />
-                  <p className="font-semibold text-lg capitalize text-black">{item.name}</p>
+                  <p className="font-semibold text-lg capitalize">{item.name}</p>
                 </div>
               </Link>
 
-              {/* Botones con stopPropagation */}
               <div className="flex justify-center gap-4 mt-3">
                 <button
                   onClick={(e) => {
@@ -182,7 +202,7 @@ export default function Home() {
           >
             Pokémon del día
           </button>
-          <div className="mt-2" >
+          <div className="mt-2">
             <input
               type="text"
               value={search}
@@ -191,6 +211,13 @@ export default function Home() {
               className="w-full border rounded px-2 py-1 text-sm placeholder-black text-black"
             />
           </div>
+          {/* Botón de modo oscuro dentro del menú */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="block w-full text-left px-3 py-2 mt-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+          >
+            {darkMode ? "Modo Claro" : "Modo Oscuro"}
+          </button>
         </div>
       </div>
     </main>
