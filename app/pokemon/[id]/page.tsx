@@ -2,6 +2,7 @@
 import { fetchPokemon } from "@/lib/pokeapi";
 import { Collection } from "@/types/collection";
 import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
+import AbilityList from "./AbilityList";
 import { JSX } from "react";
 
 export default async function PokemonDetail(props: { params: Promise<{ id: string }> }) {
@@ -97,16 +98,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
         {/* Habilidades */}
         <div className="mb-6">
           <h2 className="font-semibold text-lg mb-2 text-black">Habilidades</h2>
-          <ul className="flex flex-wrap gap-2">
-            {pokemon.abilities.map((a) => (
-              <li
-                key={a.ability.name}
-                className="px-3 py-1 bg-gray-100 rounded capitalize text-black text-sm"
-              >
-                {a.ability.name.replace("-", " ")}
-              </li>
-            ))}
-          </ul>
+          <AbilityList abilities={pokemon.abilities} />
         </div>
 
         {/* Descripción */}
