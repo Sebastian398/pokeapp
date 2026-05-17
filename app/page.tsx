@@ -19,7 +19,8 @@ export default function Home() {
   const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
   const [search, setSearch] = useState("");
   const [darkMode, setDarkMode] = useState(false);
-
+  const [menuOpen, setMenuOpen] = useState(false);
+  
   useEffect(() => {
     async function load() {
       const resList = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1900");
@@ -68,10 +69,12 @@ export default function Home() {
     } else {
       setFiltered(list);
     }
+      setMenuOpen(false);
   }
 
   function handleDaily() {
     window.location.href = "/pokemon/daily";
+    setMenuOpen(false);
   }
 
   function handleSearch(query: string) {
@@ -85,13 +88,26 @@ export default function Home() {
     );
   }
 
+  // cerrar menú al hacer clic fuera
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const menu = document.getElementById("floating-menu");
+      const button = document.getElementById("menu-button");
+      if (menuOpen && menu && !menu.contains(e.target as Node) && !button?.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [menuOpen]);
+
   return (
     <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-100 to-gray-200 text-black"} min-h-screen p-6`}>
       
-      {/* Título estilo Pokébola con variación en modo oscuro */}
+      {/* Título estilo Pokébola */}
       <h1 className={`text-6xl font-extrabold text-center mb-6 
         ${darkMode 
-          ? "bg-gradient-to-b from-white to-gray-300 [text-shadow:2px_2px_0_black]" 
+          ? "bg-gradient-to-b from-red-600 to-black [text-shadow:2px_2px_0_white]" 
           : "bg-gradient-to-b from-red-600 to-white [text-shadow:2px_2px_0_black]"} 
         bg-clip-text text-transparent drop-shadow-lg`}>
         Mi Pokédex
@@ -101,13 +117,13 @@ export default function Home() {
       <div className="flex justify-center gap-10 mb-8">
         <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
           <p className="text-xl font-bold text-red-600">Atrapados</p>
-          <p className={`${darkMode ? "text-black" : "text-black"} text-2xl`}>
+          <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
             {Object.keys(collection.captured).length}
           </p>
         </div>
         <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
           <p className="text-xl font-bold text-yellow-500">Favoritos</p>
-          <p className={`${darkMode ? "text-black" : "text-black"} text-2xl`}>
+          <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
             {Object.keys(collection.favorites).length}
           </p>
         </div>
@@ -173,21 +189,22 @@ export default function Home() {
 
       {/* Botón flotante con menú */}
       <div className="fixed bottom-6 right-6">
-        <button
-          onClick={() => {
-            const menu = document.getElementById("floating-menu");
-            if (menu) menu.classList.toggle("hidden");
-          }}
-          className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700"
-        >
-          ☰
-        </button>
-
-        <div id="floating-menu" className="hidden bg-white shadow-lg rounded-lg p-4 mt-2 w-56 border-blue-600 border">
+        {!menuOpen && (
           <button
-            onClick={() => handleFilter("captured")}
-            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+            id="menu-button"
+            onClick={() => setMenuOpen(true)}
+            className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700"
           >
+            ☰
+          </button>
+        )}
+
+        {menuOpen && (
+          <div id="floating-menu" className="bg-white shadow-lg rounded-lg p-4 mt-2 w-56 border-blue-600 border">
+            <button
+              onClick={() => handleFilter("captured")}
+              className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+            >
             Mostrar atrapados
           </button>
           <button
@@ -214,11 +231,11 @@ export default function Home() {
           {/* Botón de modo oscuro dentro del menú */}
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className="block w-full text-left px-3 py-2 mt-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+            className="block w-full text-left px-3 py-2 mt-2 hover:bg-gray-100 text-black"
           >
             {darkMode ? "Modo Claro" : "Modo Oscuro"}
           </button>
-        </div>
+        </div>)}
       </div>
     </main>
   );
