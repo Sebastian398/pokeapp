@@ -201,6 +201,13 @@ export default function Home() {
 
         {menuOpen && (
           <div id="floating-menu" className="bg-white shadow-lg rounded-lg p-4 mt-2 w-56 border-blue-600 border">
+            {/* Botón de modo oscuro dentro del menú */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="block w-full text-left px-3 py-2 mt-2 hover:bg-gray-100 text-black"
+            >
+              {darkMode ? "Modo Claro" : "Modo Oscuro"}
+            </button> 
             <button
               onClick={() => handleFilter("captured")}
               className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
@@ -228,13 +235,6 @@ export default function Home() {
               className="w-full border rounded px-2 py-1 text-sm placeholder-black text-black"
             />
           </div>
-          {/* Botón de modo oscuro dentro del menú */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="block w-full text-left px-3 py-2 mt-2 hover:bg-gray-100 text-black"
-          >
-            {darkMode ? "Modo Claro" : "Modo Oscuro"}
-          </button>
         </div>)}
       </div>
     </main>
