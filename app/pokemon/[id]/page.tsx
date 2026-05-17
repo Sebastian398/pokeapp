@@ -210,9 +210,9 @@ function renderChain(node: EvolutionNode): JSX.Element {
 
       {/* Evoluciones */}
       {node.evolves_to.length > 0 && node.evolves_to.map((next: EvolutionNode) => (
-        <div key={next.species.name} className="flex items-center gap-6">
+        <div key={next.species.name} className="flex items-center gap-6 text-s">
           <div className="flex flex-col items-center">
-            <span className="text-4xl text-blue-900">➡️</span>
+            <span className="text-4xl text-blue-900">→</span>
             {next.evolution_details[0] && (
               <span className="text-xs text-green-600">
                 {next.evolution_details[0].min_level
