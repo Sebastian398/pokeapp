@@ -203,7 +203,7 @@ function renderChain(node: EvolutionNode): JSX.Element {
         <img
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractId(node.species.url)}.png`}
           alt={node.species.name}
-          className="w-24 h-24"
+          className="w-20 h-20 max-w-[80px] max-h-[80px] object-contain"
         />
         <span className="capitalize font-bold text-black">{node.species.name}</span>
       </div>
