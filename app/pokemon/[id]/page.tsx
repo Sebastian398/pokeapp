@@ -53,7 +53,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   const chain = await resChain.json();
 
   const movesDetailed = await Promise.all(
-  pokemon.moves.slice(0, 20).map(async (m) => {
+  pokemon.moves.map(async (m) => {
     const resMove = await fetch(m.move.url);
     const moveData = await resMove.json();
     return {
@@ -223,6 +223,8 @@ function renderChain(node: EvolutionNode): JSX.Element {
               <span className="text-xs text-green-600">
                 {next.evolution_details[0].min_level
                   ? `Nivel ${next.evolution_details[0].min_level}`
+                  : next.evolution_details[0].item
+                  ? `Usando ${next.evolution_details[0].item.name.replace("-", " ")}`
                   : next.evolution_details[0].trigger?.name
                   ? `Por ${next.evolution_details[0].trigger.name}`
                   : ""}

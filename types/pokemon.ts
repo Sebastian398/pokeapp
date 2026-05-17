@@ -36,6 +36,7 @@ export interface TypeResponse {
 export interface EvolutionDetail {
   min_level: number | null;
   trigger: { name: string } | null;
+  item?: { name: string };
 }
 
 export interface EvolutionNode {
