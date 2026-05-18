@@ -31,51 +31,54 @@ export default function MovesTable({ groupedMoves }: { groupedMoves: Record<stri
       </div>
 
       {/* Tabla o mensaje */}
-      {groupedMoves[filter] && groupedMoves[filter].length > 0 ? (
-        <table className="min-w-full border border-gray-300 text-sm">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-2 py-1 text-left text-black">Movimiento</th>
-              {filter === "level-up" && <th className="px-2 py-1 text-left text-black">Nivel</th>}
-              <th className="px-2 py-1 text-left text-black">Potencia</th>
-              <th className="px-2 py-1 text-left text-black">Precisión</th>
-              <th className="px-2 py-1 text-left text-black">Categoría</th>
+{groupedMoves[filter] && groupedMoves[filter].length > 0 ? (
+  <div className="overflow-x-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+      <thead className="bg-gray-200">
+        <tr>
+          <th className="px-2 py-1 text-left text-black">Movimiento</th>
+          {filter === "level-up" && <th className="px-2 py-1 text-left text-black">Nivel</th>}
+          <th className="px-2 py-1 text-left text-black">Potencia</th>
+          <th className="px-2 py-1 text-left text-black">Precisión</th>
+          <th className="px-2 py-1 text-left text-black">Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        {groupedMoves[filter].map((m) => (
+          <React.Fragment key={m.name}>
+            <tr className="odd:bg-white even:bg-gray-50">
+              <td
+                className="px-2 py-1 capitalize text-black cursor-pointer hover:underline"
+                onClick={() => setSelectedMove(m.name)}
+              >
+                {m.name.replace("-", " ")}
+              </td>
+              {filter === "level-up" && <td className="px-2 py-1 text-black">{m.level}</td>}
+              <td className="px-2 py-1 text-xs sm:text-sm text-black whitespace-nowrap">{m.power}</td>
+              <td className="px-2 py-1 text-black">{m.accuracy}</td>
+              <td className={`px-2 py-1 capitalize ${categoriesColors[m.category] || "text-black"}`}>
+                {m.category}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {groupedMoves[filter].map((m) => (
-              <React.Fragment key={m.name}>
-                <tr className="odd:bg-white even:bg-gray-50">
-                  <td
-                    className="px-2 py-1 capitalize text-black cursor-pointer hover:underline"
-                    onClick={() => setSelectedMove(m.name)}
-                  >
-                    {m.name.replace("-", " ")}
-                  </td>
-                  {filter === "level-up" && <td className="px-2 py-1 text-black">{m.level}</td>}
-                  <td className="px-2 py-1 text-black">{m.power}</td>
-                  <td className="px-2 py-1 text-black">{m.accuracy}</td>
-                  <td className={`px-2 py-1 capitalize ${categoriesColors[m.category] || "text-black"}`}>
-                    {m.category}
-                  </td>
-                </tr>
 
-                {selectedMove === m.name && (
-                  <tr>
-                    <td colSpan={5} className="px-2 py-1 text-gray-600 italic bg-gray-100">
-                      {m.description}
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-center text-gray-500 italic">
-          Ningún movimiento se puede aprender por este método
-        </p>
-      )}
+            {selectedMove === m.name && (
+              <tr>
+                <td colSpan={5} className="px-2 py-1 text-gray-600 italic bg-gray-100">
+                  {m.description}
+                </td>
+              </tr>
+            )}
+          </React.Fragment>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <p className="text-center text-gray-500 italic">
+    Ningún movimiento se puede aprender por este método
+  </p>
+)}
+
     </div>
   );
 }
