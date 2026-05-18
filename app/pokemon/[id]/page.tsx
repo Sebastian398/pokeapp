@@ -2,6 +2,8 @@
 import { fetchPokemon } from "@/lib/pokeapi";
 import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
 import AbilityList from "./AbilityList";
+import MovesTable from "./movesTable";
+import { MoveDetailed } from "@/types/move";
 import { JSX } from "react";
 import Link from "next/link";
 
@@ -52,7 +54,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   const resChain = await fetch(species.evolution_chain.url);
   const chain = await resChain.json();
 
-  const movesDetailed = await Promise.all(
+  const movesDetailed: MoveDetailed[] = await Promise.all(
   pokemon.moves.map(async (m) => {
     const resMove = await fetch(m.move.url);
     const moveData = await resMove.json();
@@ -61,6 +63,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
       method: m.version_group_details[0]?.move_learn_method.name || "—",
       level: m.version_group_details[0]?.level_learned_at || "—",
       power: moveData.power || "—",
+      accuracy: moveData.accuracy || "—",
       category: moveData.damage_class?.name || "—",
     };
   })
@@ -71,7 +74,7 @@ movesDetailed.forEach((m) => {
   if (!groupedMoves[m.method]) groupedMoves[m.method] = [];
   groupedMoves[m.method].push(m);
 });
-
+<MovesTable groupedMoves={groupedMoves} />
   return (
     <main className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
@@ -143,37 +146,10 @@ movesDetailed.forEach((m) => {
         </div>
 
         {/* Movimientos */}
-        {Object.keys(groupedMoves).map((method) => (
-  <div key={method} className="mb-6">
-    <h3 className="font-semibold text-md mb-2 capitalize text-black">
-      {method === "level-up" ? "Por nivel" :
-       method === "machine" ? "Por MT/MO" :
-       method === "egg" ? "Por huevo" :
-       method === "tutor" ? "Por tutor" : method}
-    </h3>
-    <table className="min-w-full border border-gray-300 text-sm">
-      <thead className="bg-gray-200">
-        <tr>
-          <th className="px-2 py-1 text-left text-black">Movimiento</th>
-          <th className="px-2 py-1 text-left text-black">Nivel</th>
-          <th className="px-2 py-1 text-left text-black">Potencia</th>
-          <th className="px-2 py-1 text-left text-black">Categoría</th>
-        </tr>
-      </thead>
-      <tbody>
-        {groupedMoves[method].map((m) => (
-          <tr key={m.name} className="odd:bg-white even:bg-gray-50">
-            <td className="px-2 py-1 capitalize text-black">{m.name.replace("-", " ")}</td>
-            <td className="px-2 py-1 text-black">{m.level}</td>
-            <td className="px-2 py-1 text-black">{m.power}</td>
-            <td className="px-2 py-1 capitalize text-black">{m.category}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-))}
-
+        <div className="mb-6">
+          <h2 className="font-semibold text-lg mb-2 text-black">Movimientos</h2>
+          <MovesTable groupedMoves={groupedMoves} />
+        </div>
 
         {/* Debilidades y resistencias */}
         <div className="mb-6">
