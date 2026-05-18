@@ -2,6 +2,8 @@
 import { Collection } from "@/types/collection";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
+import { NextResponse } from "next/server";
+import { redis } from "@/lib/redis";
 
 const COLLECTION_PATH = path.join(process.cwd(), "data/collection.json");
 
@@ -19,31 +21,58 @@ async function updateCollection(updated: Collection) {
 }
 
 export async function GET() {
-  const collection = await getCollection();
-  return Response.json(collection);
+  try {
+    const captured = await redis.hgetall("captured");
+    const favorites = await redis.hgetall("favorites");
+
+    return NextResponse.json({
+      captured: captured || {},
+      favorites: favorites || {},
+    });
+  } catch (err) {
+    return NextResponse.json({
+      captured: {},
+      favorites: {},
+      error: "server error",
+      details: String(err),
+    }, { status: 500 });
+  }
 }
 
 export async function PATCH(request: Request) {
-  const body = await request.json();
-  const { id, captured = undefined, favorite = undefined } = body;
+  try {
+    const { id, captured, favorite } = await request.json();
 
-  if (!id) {
-    return Response.json({ error: "missing id" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "missing id" }, { status: 400 });
+    }
+
+    if (captured !== undefined) {
+      if (captured) {
+        await redis.hset("captured", { [id]: true });
+      } else {
+        await redis.hdel("captured", id);
+      }
+    }
+
+    if (favorite !== undefined) {
+      if (favorite) {
+        await redis.hset("favorites", { [id]: true });
+      } else {
+        await redis.hdel("favorites", id);
+      }
+    }
+
+    const updated = {
+      captured: await redis.hgetall("captured"),
+      favorites: await redis.hgetall("favorites"),
+    };
+
+    return NextResponse.json(updated);
+  } catch (err) {
+    return NextResponse.json(
+      { error: "server error", details: String(err) },
+      { status: 500 }
+    );
   }
-
-  const collection = await getCollection();
-
-  if (captured !== undefined) {
-    collection.captured[id] = captured;
-    if (!captured) delete collection.captured[id];
-  }
-
-  if (favorite !== undefined) {
-    collection.favorites[id] = favorite;
-    if (!favorite) delete collection.favorites[id];
-  }
-
-  await updateCollection(collection);
-
-  return Response.json(collection);
 }

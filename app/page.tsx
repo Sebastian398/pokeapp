@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Collection } from "@/types/collection";
 import Link from "next/link";
@@ -11,10 +10,11 @@ interface PokemonListItem {
 }
 
 export default function Home() {
-  const [collection, setCollection] = useState<Collection>({
-    captured: {},
-    favorites: {},
-  });
+  const [collection, setCollection] = useState<{ captured: Record<string, boolean>, favorites: Record<string, boolean> }>({
+  captured: {},
+  favorites: {},
+});
+
   const [list, setList] = useState<PokemonListItem[]>([]);
   const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
   const [search, setSearch] = useState("");
@@ -118,13 +118,13 @@ export default function Home() {
         <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
           <p className="text-xl font-bold text-red-600">Atrapados</p>
           <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
-            {Object.keys(collection.captured).length}
+            {Object.keys(collection.captured || {}).length}
           </p>
         </div>
         <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
           <p className="text-xl font-bold text-yellow-500">Favoritos</p>
           <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
-            {Object.keys(collection.favorites).length}
+            {Object.keys(collection.favorites || {}).length}
           </p>
         </div>
       </div>
