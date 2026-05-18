@@ -104,7 +104,7 @@ export default function Home() {
   return (
     <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-100 to-gray-200 text-black"} min-h-screen p-6`}>
       
-      {/* Título estilo Pokébola */}
+      {/* Título */}
       <h1 className={`text-6xl font-extrabold text-center mb-6 
         ${darkMode 
           ? "bg-gradient-to-b from-red-600 to-black [text-shadow:2px_2px_0_white]" 
@@ -220,6 +220,12 @@ export default function Home() {
           >
             Mostrar favoritos
           </button>
+          <button
+  onClick={() => handleFilter("all")}
+  className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+>
+  Mostrar todos
+</button>
           <button
             onClick={handleDaily}
             className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
