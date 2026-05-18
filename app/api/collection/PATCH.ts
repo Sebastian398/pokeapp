@@ -1,44 +1,38 @@
-import { Collection } from "@/types/collection";
-import { readFile, writeFile } from "fs/promises";
-import path from "path";
+import { NextResponse } from "next/server";
+import { redis } from "@/lib/redis";
 
-const COLLECTION_PATH = path.join(process.cwd(), "src/data/collection.json");
-
-async function getCollection(): Promise<Collection> {
+export async function PATCH(req: Request) {
   try {
-    const data = await readFile(COLLECTION_PATH, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return { captured: {}, favorites: {} };
+    const { id, captured, favorite } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "missing id" }, { status: 400 });
+    }
+
+    if (captured !== undefined) {
+      if (captured) {
+        await redis.hset("captured", { [id]: true });
+      } else {
+        await redis.hdel("captured", id);
+      }
+    }
+
+    if (favorite !== undefined) {
+      if (favorite) {
+        await redis.hset("favorites", { [id]: true });
+      } else {
+        await redis.hdel("favorites", id);
+      }
+    }
+
+    const updated = {
+      captured: await redis.hgetall("captured"),
+      favorites: await redis.hgetall("favorites"),
+    };
+
+    return NextResponse.json(updated);
+  } catch (err) {
+    // 🔹 Siempre devolver algo, incluso si hay error
+    return NextResponse.json({ error: "server error", details: String(err) }, { status: 500 });
   }
-}
-
-async function updateCollection(updated: Collection) {
-  return await writeFile(COLLECTION_PATH, JSON.stringify(updated, null, 2));
-}
-
-export async function PATCH(request: Request) {
-  const body = await request.json();
-
-  const { id, captured = undefined, favorite = undefined } = body;
-
-  if (!id) {
-    return Response.json({ error: "missing id" }, { status: 400 });
-  }
-
-  const collection = await getCollection();
-
-  if (captured !== undefined) {
-    collection.captured[id] = captured;
-    if (!captured) delete collection.captured[id];
-  }
-
-  if (favorite !== undefined) {
-    collection.favorites[id] = favorite;
-    if (!favorite) delete collection.favorites[id];
-  }
-
-  await updateCollection(collection);
-
-  return Response.json(collection);
 }
