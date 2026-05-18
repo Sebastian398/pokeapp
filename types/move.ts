@@ -6,4 +6,5 @@ export interface MoveDetailed {
   power: number | string;
   accuracy: number | string;
   category: string;
+  description: string;
 }

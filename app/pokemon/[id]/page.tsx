@@ -58,6 +58,11 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   pokemon.moves.map(async (m) => {
     const resMove = await fetch(m.move.url);
     const moveData = await resMove.json();
+    const entry = moveData.effect_entries.find(
+      (e: { language: { name: string } }) => e.language.name === "es"
+    ) || moveData.effect_entries.find(
+      (e: { language: { name: string } }) => e.language.name === "en"
+    );
     return {
       name: m.move.name,
       method: m.version_group_details[0]?.move_learn_method.name || "—",
@@ -65,6 +70,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
       power: moveData.power || "—",
       accuracy: moveData.accuracy || "—",
       category: moveData.damage_class?.name || "—",
+      description: entry ? entry.short_effect : "Sin descripción disponible",
     };
   })
 );
