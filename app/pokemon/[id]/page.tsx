@@ -1,6 +1,5 @@
 // src/app/pokemon/[id]/page.tsx
 import { fetchPokemon } from "@/lib/pokeapi";
-import { Collection } from "@/types/collection";
 import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
 import AbilityList from "./AbilityList";
 import { JSX } from "react";
@@ -31,6 +30,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
       return resType.json() as Promise<TypeResponse>;
     })
   );
+  const relations = calculateTypeRelations(pokemon.types, typeRelations);
   const combinedRelations = {
     double_damage_from: new Set<string>(),
     half_damage_from: new Set<string>(),
@@ -65,6 +65,12 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
     };
   })
 );
+
+const groupedMoves: Record<string, typeof movesDetailed> = {};
+movesDetailed.forEach((m) => {
+  if (!groupedMoves[m.method]) groupedMoves[m.method] = [];
+  groupedMoves[m.method].push(m);
+});
 
   return (
     <main className="min-h-screen bg-gray-50 p-4">
@@ -137,33 +143,37 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
         </div>
 
         {/* Movimientos */}
-        <div className="mb-6">
-          <h2 className="font-semibold text-lg mb-2 text-black">Movimientos</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-300 text-sm">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="px-2 py-1 text-left text-black">Movimiento</th>
-                  <th className="px-2 py-1 text-left text-black">Método</th>
-                  <th className="px-2 py-1 text-left text-black">Nivel</th>
-                  <th className="px-2 py-1 text-left text-black">Potencia</th>
-                  <th className="px-2 py-1 text-left text-black">Categoría</th>
-                </tr>
-              </thead>
-              <tbody>
-                {movesDetailed.map((m) => (
-                  <tr key={m.name} className="odd:bg-white even:bg-gray-50">
-                    <td className="px-2 py-1 capitalize text-black">{m.name.replace("-", " ")}</td>
-                    <td className="px-2 py-1 text-black">{m.method}</td>
-                    <td className="px-2 py-1 text-black">{m.level}</td>
-                    <td className="px-2 py-1 text-black">{m.power}</td>
-                    <td className="px-2 py-1 capitalize text-black">{m.category}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        {Object.keys(groupedMoves).map((method) => (
+  <div key={method} className="mb-6">
+    <h3 className="font-semibold text-md mb-2 capitalize text-black">
+      {method === "level-up" ? "Por nivel" :
+       method === "machine" ? "Por MT/MO" :
+       method === "egg" ? "Por huevo" :
+       method === "tutor" ? "Por tutor" : method}
+    </h3>
+    <table className="min-w-full border border-gray-300 text-sm">
+      <thead className="bg-gray-200">
+        <tr>
+          <th className="px-2 py-1 text-left text-black">Movimiento</th>
+          <th className="px-2 py-1 text-left text-black">Nivel</th>
+          <th className="px-2 py-1 text-left text-black">Potencia</th>
+          <th className="px-2 py-1 text-left text-black">Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        {groupedMoves[method].map((m) => (
+          <tr key={m.name} className="odd:bg-white even:bg-gray-50">
+            <td className="px-2 py-1 capitalize text-black">{m.name.replace("-", " ")}</td>
+            <td className="px-2 py-1 text-black">{m.level}</td>
+            <td className="px-2 py-1 text-black">{m.power}</td>
+            <td className="px-2 py-1 capitalize text-black">{m.category}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+))}
+
 
         {/* Debilidades y resistencias */}
         <div className="mb-6">
@@ -171,15 +181,15 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-black">
             <div className="bg-red-100 p-3 rounded">
               <p className="font-bold text-red-700">Débil contra</p>
-              <p>{[...combinedRelations.double_damage_from].join(", ") || "Ninguno"}</p>
+              <p>{relations.weaknesses.join(", ") || "Ninguno"}</p>
             </div>
             <div className="bg-green-100 p-3 rounded">
               <p className="font-bold text-green-700">Resistente contra</p>
-              <p>{[...combinedRelations.half_damage_from].join(", ") || "Ninguno"}</p>
+              <p>{relations.resistances.join(", ") || "Ninguno"}</p>
             </div>
             <div className="bg-blue-100 p-3 rounded">
               <p className="font-bold text-blue-700">Inmune contra</p>
-              <p>{[...combinedRelations.no_damage_from].join(", ") || "Ninguno"}</p>
+              <p>{relations.immunities.join(", ") || "Ninguno"}</p>
             </div>
           </div>
         </div>
@@ -225,6 +235,10 @@ function renderChain(node: EvolutionNode): JSX.Element {
                   ? `Nivel ${next.evolution_details[0].min_level}`
                   : next.evolution_details[0].item
                   ? `Usando ${next.evolution_details[0].item.name.replace("-", " ")}`
+                  : next.evolution_details[0].min_happiness
+                  ? `Por amistad`
+                  : next.evolution_details[0].known_move
+                  ? `Conociendo ${next.evolution_details[0].known_move.name.replace("-", " ")}`
                   : next.evolution_details[0].trigger?.name
                   ? `Por ${next.evolution_details[0].trigger.name}`
                   : ""}
@@ -263,4 +277,24 @@ function getStatColorByValue(value: number): string {
   if (value < 80) return "bg-yellow-500";    // Medio
   if (value < 100) return "bg-blue-500";     // Bueno
   return "bg-green-500";                     // Excelente
+}
+function calculateTypeRelations(types: { type: { name: string, url: string } }[], typeRelations: TypeResponse[]) {
+  const allTypes = [
+    "normal","fire","water","grass","electric","ice","fighting","poison","ground","flying",
+    "psychic","bug","rock","ghost","dragon","dark","steel","fairy"
+  ];
+  const multipliers: Record<string, number> = {};
+  allTypes.forEach(t => multipliers[t] = 1);
+
+  typeRelations.forEach(rel => {
+    rel.damage_relations.double_damage_from.forEach(d => multipliers[d.name] *= 2);
+    rel.damage_relations.half_damage_from.forEach(d => multipliers[d.name] *= 0.5);
+    rel.damage_relations.no_damage_from.forEach(d => multipliers[d.name] *= 0);
+  });
+
+  return {
+    weaknesses: Object.keys(multipliers).filter(t => multipliers[t] > 1),
+    resistances: Object.keys(multipliers).filter(t => multipliers[t] > 0 && multipliers[t] < 1),
+    immunities: Object.keys(multipliers).filter(t => multipliers[t] === 0),
+  };
 }

@@ -37,6 +37,8 @@ export interface EvolutionDetail {
   min_level: number | null;
   trigger: { name: string } | null;
   item?: { name: string };
+  min_happiness?: number;
+  known_move?: { name: string };
 }
 
 export interface EvolutionNode {
