@@ -22,12 +22,12 @@ async function updateCollection(updated: Collection) {
 
 export async function GET() {
   try {
-    const captured = await redis.hgetall("captured");
-    const favorites = await redis.hgetall("favorites");
+    const captured = await redis.hgetall("captured") || {};
+    const favorites = await redis.hgetall("favorites") || {};
 
     return NextResponse.json({
-      captured: captured || {},
-      favorites: favorites || {},
+      captured,
+      favorites,
     });
   } catch (err) {
     return NextResponse.json({
@@ -64,8 +64,8 @@ export async function PATCH(request: Request) {
     }
 
     const updated = {
-      captured: await redis.hgetall("captured"),
-      favorites: await redis.hgetall("favorites"),
+      captured: await redis.hgetall("captured") || {},
+      favorites: await redis.hgetall("favorites") || {},
     };
 
     return NextResponse.json(updated);

@@ -18,7 +18,7 @@ export default function Home() {
   const [list, setList] = useState<PokemonListItem[]>([]);
   const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
   const [search, setSearch] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   
   useEffect(() => {
