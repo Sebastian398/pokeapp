@@ -1,18 +1,21 @@
 import { fetchPokemon } from "@/lib/pokeapi";
-import { getDailyPokemonId } from "@/lib/daily-pokemon";
 
 export default async function DailyPokemonPage() {
-  const dailyId = getDailyPokemonId();
+  // Consumir la API que ya guarda en Redis
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/daily`, {
+    cache: "no-store", // evita que Next.js cachee la respuesta
+  });
+  const data = await res.json();
 
-  if (!dailyId) {
+  if (data.error) {
     return (
       <div className="text-center p-8">
-        <p>Aún no tienes ningún Pokémon marcado como atrapado.</p>
+        <p>{data.error}</p>
       </div>
     );
   }
 
-  const pokemon = await fetchPokemon(dailyId);
+  const pokemon = await fetchPokemon(data.id);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-600 flex items-center justify-center">
@@ -26,6 +29,7 @@ export default async function DailyPokemonPage() {
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
           alt={pokemon.name}
           className="w-32 h-32 mx-auto mb-4"
+          loading="lazy"
         />
 
         <p className="text-xl font-bold capitalize text-black">
