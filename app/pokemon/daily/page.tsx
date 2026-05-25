@@ -1,9 +1,9 @@
 import { fetchPokemon } from "@/lib/pokeapi";
 
 export default async function DailyPokemonPage() {
-  // Consumir la API que ya guarda en Redis
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/daily`, {
-    cache: "no-store", // evita que Next.js cachee la respuesta
+  // Llamar a la API en el servidor
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/daily`, {
+    cache: "no-store",
   });
   const data = await res.json();
 
@@ -29,7 +29,6 @@ export default async function DailyPokemonPage() {
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
           alt={pokemon.name}
           className="w-32 h-32 mx-auto mb-4"
-          loading="lazy"
         />
 
         <p className="text-xl font-bold capitalize text-black">

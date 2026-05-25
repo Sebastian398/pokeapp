@@ -18,15 +18,17 @@ export async function fetchPokemonList(offset = 0): Promise<PokemonList> {
   return res.json();
 }
 
-export async function fetchPokemon(idOrName: string): Promise<Pokemon> {
-  // Corrección: si llega vacío, devolvemos un error más claro
-  if (!idOrName || idOrName.trim() === "") {
-    return Promise.reject("ID o nombre de Pokémon vacío");
+export async function fetchPokemon(idOrName: string | number) {
+  const value = String(idOrName).trim();
+
+  if (!value) {
+    throw new Error("El parámetro idOrName está vacío");
   }
 
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`);
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
   if (!res.ok) {
-    throw new Error(`Pokémon no encontrado con id/nombre: ${idOrName}`);
+    throw new Error(`Pokémon no encontrado con id/nombre: ${value}`);
   }
   return res.json();
 }
+
