@@ -18,6 +18,43 @@
     --foreground: #ededed;
   }
 }
+@keyframes neon-rotate {
+  0% {
+    border-image-source: linear-gradient(0deg, #00f, #a020f0);
+  }
+  50% {
+    border-image-source: linear-gradient(180deg, #a020f0, #00f);
+  }
+  100% {
+    border-image-source: linear-gradient(360deg, #00f, #a020f0);
+  }
+}
+
+.neon-card {
+  position: relative;
+  border-radius: 1rem; /* bordes curvos */
+  overflow: hidden;
+}
+
+.neon-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px;
+  background: conic-gradient(from 0deg, #00f, #a020f0, #00f);
+  animation: neon-spin 4s linear infinite;
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+
+.neon-card > * {
+  position: relative;
+  z-index: 1;
+}
 
 body {
   background: var(--background);

@@ -4,7 +4,7 @@ import { EvolutionNode, Pokemon, TypeResponse } from "@/types/pokemon";
 import AbilityList from "./AbilityList";
 import MovesTable from "./movesTable";
 import { MoveDetailed } from "@/types/move";
-import { JSX } from "react";
+import { JSX} from "react";
 import Link from "next/link";
 
 export default async function PokemonDetail(props: { params: Promise<{ id: string }> }) {

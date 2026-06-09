@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Collection } from "@/types/collection";
 import Link from "next/link";
 import { FaStar, FaRegStar, FaCheckCircle } from "react-icons/fa";
 
@@ -115,14 +114,13 @@ export default function Home() {
 
       {/* Estadísticas */}
       <div className="flex justify-center gap-10 mb-8">
-        <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
-          <p className="text-xl font-bold text-red-600">Atrapados</p>
-          <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
+        <div className={`neon-card shadow p-4 text-center ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+          <p className={`text-xl font-bold ${darkMode ? "text-cyan-400" : "text-cyan-600"}`}>Atrapados</p>          <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
             {Object.keys(collection.captured || {}).length}
           </p>
         </div>
-        <div className={`${darkMode ? "bg-gray-800 border border-gray-600" : "bg-white"} shadow rounded-lg p-4 text-center`}>
-          <p className="text-xl font-bold text-yellow-500">Favoritos</p>
+        <div className={`neon-card shadow rounded-lg p-4 text-center ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+          <p className={`text-xl font-bold ${darkMode ? "text-purple-400" : "text-purple-500"}`}>Favoritos</p>
           <p className={`${darkMode ? "text-white" : "text-black"} text-2xl`}>
             {Object.keys(collection.favorites || {}).length}
           </p>
@@ -140,7 +138,7 @@ export default function Home() {
             <li
               key={item.name}
               className={`rounded-xl shadow-lg p-4 text-center border transition-transform transform hover:scale-105 
-                ${darkMode ? "bg-gray-800 border-gray-700 hover:border-blue-400" : "bg-white hover:border-blue-400 hover:shadow-xl"}`}
+                ${darkMode ? "bg-gray-800 border-gray-700 hover:border-blue-400" : "bg-white hover:border-cyan-500 hover:shadow-xl"}`}
             >
               <Link href={`/pokemon/${id}`} className="block cursor-pointer">
                 <div>
@@ -193,7 +191,7 @@ export default function Home() {
           <button
             id="menu-button"
             onClick={() => setMenuOpen(true)}
-            className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700"
+            className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-500 items-center justify-center"
           >
             ☰
           </button>
