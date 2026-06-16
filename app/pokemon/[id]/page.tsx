@@ -12,8 +12,26 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
   const pokemon: Pokemon = await fetchPokemon(id);
   
   // descripción de species
+  let species;
+try {
+  // intentar species directo
   const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-  const species = await resSpecies.json();
+  if (!resSpecies.ok) throw new Error("Species no encontrada");
+  species = await resSpecies.json();
+} catch {
+  // si falla, obtener el form y luego la especie base
+  const resForm = await fetch(`https://pokeapi.co/api/v2/pokemon-form/${id}`);
+  if (!resForm.ok) throw new Error("Forma no encontrada");
+  const formData = await resForm.json();
+
+  const resBase = await fetch(formData.pokemon.url);
+  const baseData = await resBase.json();
+
+  const resSpecies = await fetch(baseData.species.url);
+  if (!resSpecies.ok) throw new Error("Species no encontrada");
+  species = await resSpecies.json();
+}
+
   const descriptionEntry =
   species.flavor_text_entries.find(
     (entry: { language: { name: string } }) => entry.language.name === "es"

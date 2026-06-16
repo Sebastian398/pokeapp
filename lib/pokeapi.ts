@@ -20,15 +20,30 @@ export async function fetchPokemonList(offset = 0): Promise<PokemonList> {
 
 export async function fetchPokemon(idOrName: string | number) {
   const value = String(idOrName).trim();
-
   if (!value) {
     throw new Error("El parámetro idOrName está vacío");
   }
 
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
+  // Intentar primero con /pokemon
+  let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
   if (!res.ok) {
-    throw new Error(`Pokémon no encontrado con id/nombre: ${value}`);
+    // Si falla, probar con /pokemon-form
+    res = await fetch(`https://pokeapi.co/api/v2/pokemon-form/${value}`);
+    if (!res.ok) {
+      throw new Error(`Pokémon o forma no encontrada: ${value}`);
+    }
   }
-  return res.json();
+
+  const data = await res.json();
+
+  // Si es un form, trae también el Pokémon base para stats/habilidades
+  if (data.pokemon) {
+    const baseRes = await fetch(data.pokemon.url);
+    if (!baseRes.ok) throw new Error("Error al obtener datos base del Pokémon");
+    const baseData = await baseRes.json();
+    return { ...baseData, form: data }; // 👈 devuelves ambos
+  }
+
+  return data;
 }
 

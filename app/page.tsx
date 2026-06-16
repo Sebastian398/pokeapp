@@ -143,7 +143,7 @@ export default function Home() {
                   : "bg-white border-purple-700 hover:border-cyan-400 hover:shadow-cyan-500/30"}`
               }
             >
-              <Link href={`/pokemon/${id}`} className="block cursor-pointer">
+              <Link href={`/pokemon/${item.name}`} className="block cursor-pointer">
                 <div>
                   <div className="text-xs text-gray-400 mb-2">#{id}</div>
                   <img
