@@ -210,8 +210,8 @@ export default function Home() {
             id="floating-menu"
             className={`rounded-2xl p-4 mt-2 w-64 transition-all duration-300
               ${darkMode
-                ? "bg-gray-800 text-white shadow-lg border border-purple-500"
-                : "bg-white text-black shadow-lg border border-cyan-500"}`}
+                ? "bg-gray-800 text-white shadow-lg border border-cyan-500"
+                : "bg-white text-black shadow-lg border border-purple-500"}`}
           >
             
             <button
@@ -250,7 +250,7 @@ export default function Home() {
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Buscar por nombre..."
-                className="w-full border rounded px-2 py-1 text-sm placeholder-gray-400 bg-gray-900 text-white"
+                className="w-full border rounded px-2 py-1 text-sm placeholder-gray-400 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
           </div>)}

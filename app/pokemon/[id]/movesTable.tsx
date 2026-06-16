@@ -19,6 +19,17 @@ export default function MovesTable({ groupedMoves }: { groupedMoves: Record<stri
     special: "text-blue-600 font-bold",
     status: "text-gray-600 italic",
   };
+  
+  function getTypeColor(type: string): string {
+    const colors: Record<string, string> = {
+      fire: "red", water: "blue", grass: "green", electric: "gold",
+      fairy: "pink", flying: "lightblue", ice: "cyan", dark: "black",
+      fighting: "brown", ground: "sienna", poison: "purple", normal: "gray",
+      steel: "lightgray", bug: "olive", psychic: "magenta", ghost: "indigo",
+      dragon: "blueviolet", rock: "burlywood"
+    };
+    return colors[type] || "gray";
+  }
 
   return (
     <div>
@@ -32,15 +43,16 @@ export default function MovesTable({ groupedMoves }: { groupedMoves: Record<stri
 
       {/* Tabla o mensaje */}
 {groupedMoves[filter] && groupedMoves[filter].length > 0 ? (
-  <div className="overflow-x-auto">
+  <div className="max-h-[490px] overflow-y-auto overflow-x-auto rounded-lg border border-gray-300">
     <table className="min-w-full border border-gray-300 text-sm">
-      <thead className="bg-gray-200">
+      <thead className="bg-gray-200 sticky top-0">
         <tr>
           <th className="px-2 py-1 text-left text-black">Movimiento</th>
           {filter === "level-up" && <th className="px-2 py-1 text-left text-black">Nivel</th>}
           <th className="px-2 py-1 text-left text-black">Potencia</th>
           <th className="px-2 py-1 text-left text-black">Precisión</th>
           <th className="px-2 py-1 text-left text-black">Categoría</th>
+          <th className="px-4 py-2 text-left text-black">Tipo</th>
         </tr>
       </thead>
       <tbody>
@@ -58,6 +70,12 @@ export default function MovesTable({ groupedMoves }: { groupedMoves: Record<stri
               <td className="px-2 py-1 text-black">{m.accuracy}</td>
               <td className={`px-2 py-1 capitalize ${categoriesColors[m.category] || "text-black"}`}>
                 {m.category}
+              </td>
+              <td
+                className="px-2 py-1 capitalize font-semibold"
+                style={{ color: getTypeColor(m.type) }}
+              >
+                {m.type}
               </td>
             </tr>
 

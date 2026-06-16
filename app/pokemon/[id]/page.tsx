@@ -70,6 +70,7 @@ export default async function PokemonDetail(props: { params: Promise<{ id: strin
       power: moveData.power || "—",
       accuracy: moveData.accuracy || "—",
       category: moveData.damage_class?.name || "—",
+      type: moveData.type?.name || "—",
       description: entry ? entry.short_effect : "Sin descripción disponible",
     };
   })
@@ -135,20 +136,23 @@ movesDetailed.forEach((m) => {
           <h2 className="font-semibold text-lg mb-2 text-black">Estadísticas</h2>
           <ul>
             {pokemon.stats.map((s) => (
-              <li key={s.stat.name} className="text-sm capitalize mb-2 text-black">
-                <div className="flex justify-between">
-                  <span>{s.stat.name.replace("-", " ")}</span>
-                  <span>{s.base_stat}</span>
+              <li key={s.stat.name} className="mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="capitalize font-semibold text-black">{s.stat.name.replace("-", " ")}</span>
+                  <span className="font-bold text-black">{s.base_stat}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded h-3 mt-1">
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div
-                    className={`h-3 rounded ${getStatColorByValue(s.base_stat)}`}
+                    className={`h-3 rounded-full ${getStatColorByValue(s.base_stat)} transition-all`}
                     style={{ width: `${Math.min(s.base_stat, 200) / 2}%` }}
                   ></div>
                 </div>
               </li>
             ))}
           </ul>
+        </div>
+        <div className="mt-4 text-center font-bold text-lg text-black">
+          Total: {pokemon.stats.reduce((acc, s) => acc + s.base_stat, 0)}
         </div>
 
         {/* Movimientos */}
