@@ -140,7 +140,7 @@ export default function Home() {
               className={`rounded-2xl shadow-lg p-4 text-center border transition-all duration-300 transform hover:scale-105
                 ${darkMode
                   ? "bg-gray-800 border-cyan-700 hover:border-purple-400 hover:shadow-purple-500/30"
-                  : "bg-white border-gray-200 hover:border-red-400 hover:shadow-lg"}`
+                  : "bg-white border-purple-700 hover:border-cyan-400 hover:shadow-cyan-500/30"}`
               }
             >
               <Link href={`/pokemon/${id}`} className="block cursor-pointer">
@@ -192,62 +192,68 @@ export default function Home() {
       <div className="fixed bottom-6 right-6">
         {!menuOpen && (
           <button
-  id="menu-button"
-  onClick={() => setMenuOpen(true)}
-  className="rounded-full w-16 h-16 shadow-lg hover:bg-blue-500 flex items-center justify-center transition-transform hover:scale-105"
->
-  <img
-  src="/pokebola3.png"
-  alt="Pokébola"
-  className="w-15 h-15 object-contain"
-/>
-</button>
+            id="menu-button"
+            onClick={() => setMenuOpen(true)}
+            className="rounded-full w-16 h-16 shadow-lg hover:border-cyan-500 hover:shadow-cyan-500/30 flex items-center justify-center transition-transform hover:scale-105"
+          >
+            <img
+            src="/pokebola3.png"
+            alt="Pokébola"
+            className="w-15 h-15 object-contain"
+          />
+          </button>
 
         )}
 
         {menuOpen && (
-          <div id="floating-menu" className="bg-white shadow-lg rounded-lg p-4 mt-2 w-56 border-blue-600 border">
-            {/* Botón de modo oscuro dentro del menú */}
+          <div
+            id="floating-menu"
+            className={`rounded-2xl p-4 mt-2 w-64 transition-all duration-300
+              ${darkMode
+                ? "bg-gray-800 text-white shadow-lg border border-purple-500"
+                : "bg-white text-black shadow-lg border border-cyan-500"}`}
+          >
+            
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="block w-full text-left px-3 py-2 mt-2 hover:bg-gray-100 text-black"
+              className="block w-full text-left px-3 py-2 rounded hover:bg-gray-700 hover:text-cyan-400 transition-colors"
             >
               {darkMode ? "Modo Claro" : "Modo Oscuro"}
-            </button> 
+            </button>
             <button
               onClick={() => handleFilter("captured")}
-              className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
+              className="block w-full text-left px-3 py-2 rounded hover:bg-gray-700 hover:text-cyan-400 transition-colors"
             >
-            Mostrar atrapados
-          </button>
-          <button
-            onClick={() => handleFilter("favorites")}
-            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
-          >
-            Mostrar favoritos
-          </button>
-          <button
-  onClick={() => handleFilter("all")}
-  className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
->
-  Mostrar todos
-</button>
-          <button
-            onClick={handleDaily}
-            className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-black"
-          >
-            Pokémon del día
-          </button>
-          <div className="mt-2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Buscar por nombre..."
-              className="w-full border rounded px-2 py-1 text-sm placeholder-black text-black"
-            />
-          </div>
-        </div>)}
+              Mostrar atrapados
+            </button>
+            <button
+              onClick={() => handleFilter("favorites")}
+              className="block w-full text-left px-3 py-2 rounded hover:bg-gray-700 hover:text-cyan-400 transition-colors"
+            >
+              Mostrar favoritos
+            </button>
+            <button
+              onClick={() => handleFilter("all")}
+              className="block w-full text-left px-3 py-2 rounded hover:bg-gray-700 hover:text-cyan-400 transition-colors"
+            >
+              Mostrar todos
+            </button>
+            <button
+              onClick={handleDaily}
+              className="block w-full text-left px-3 py-2 rounded hover:bg-gray-700 hover:text-cyan-400 transition-colors"
+            >
+              Pokémon del día
+            </button>
+            <div className="mt-3">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Buscar por nombre..."
+                className="w-full border rounded px-2 py-1 text-sm placeholder-gray-400 bg-gray-900 text-white"
+              />
+            </div>
+          </div>)}
       </div>
     </main>
   );
