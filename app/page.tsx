@@ -101,7 +101,7 @@ export default function Home() {
   }, [menuOpen]);
 
   return (
-    <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-100 to-gray-200 text-black"} min-h-screen p-6`}>
+    <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-50 to-gray-200 text-black"} min-h-screen p-6`}>
       
       {/* Título */}
       <h1 className={`text-6xl font-extrabold text-center mb-6 
@@ -137,22 +137,25 @@ export default function Home() {
           return (
             <li
               key={item.name}
-              className={`rounded-xl shadow-lg p-4 text-center border transition-transform transform hover:scale-105 
-                ${darkMode ? "bg-gray-800 border-gray-700 hover:border-blue-400" : "bg-white hover:border-cyan-500 hover:shadow-xl"}`}
+              className={`rounded-2xl shadow-lg p-4 text-center border transition-all duration-300 transform hover:scale-105
+                ${darkMode
+                  ? "bg-gray-800 border-cyan-700 hover:border-purple-400 hover:shadow-purple-500/30"
+                  : "bg-white border-gray-200 hover:border-red-400 hover:shadow-lg"}`
+              }
             >
               <Link href={`/pokemon/${id}`} className="block cursor-pointer">
                 <div>
-                  <div className="text-xs text-gray-500 mb-2">#{id}</div>
+                  <div className="text-xs text-gray-400 mb-2">#{id}</div>
                   <img
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
                     alt={item.name}
-                    className="w-20 h-20 mx-auto mb-2"
+                    className="w-24 h-24 mx-auto mb-2 drop-shadow-md"
                     loading="lazy"
                   />
-                  <p className="font-semibold text-lg capitalize">{item.name}</p>
+                  <p className="font-bold text-lg capitalize">{item.name}</p>
                 </div>
               </Link>
-
+              
               <div className="flex justify-center gap-4 mt-3">
                 <button
                   onClick={(e) => {
@@ -189,12 +192,17 @@ export default function Home() {
       <div className="fixed bottom-6 right-6">
         {!menuOpen && (
           <button
-            id="menu-button"
-            onClick={() => setMenuOpen(true)}
-            className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-500 items-center justify-center"
-          >
-            ☰
-          </button>
+  id="menu-button"
+  onClick={() => setMenuOpen(true)}
+  className="rounded-full w-16 h-16 shadow-lg hover:bg-blue-500 flex items-center justify-center transition-transform hover:scale-105"
+>
+  <img
+  src="/pokebola3.png"
+  alt="Pokébola"
+  className="w-15 h-15 object-contain"
+/>
+</button>
+
         )}
 
         {menuOpen && (

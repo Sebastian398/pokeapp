@@ -32,7 +32,7 @@
 
 .neon-card {
   position: relative;
-  border-radius: 1rem; /* bordes curvos */
+  border-radius: 1rem;
   overflow: hidden;
 }
 
@@ -59,5 +59,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif, 'Orbitron';
 }
