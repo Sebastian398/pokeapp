@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaStar, FaRegStar, FaCheckCircle } from "react-icons/fa";
+import { Luckiest_Guy } from "next/font/google";
+const luckiestGuy = Luckiest_Guy({ subsets: ["latin"], weight: "400" });
 
 interface PokemonListItem {
   name: string;
@@ -104,13 +106,14 @@ export default function Home() {
     <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-gray-50 to-gray-200 text-black"} min-h-screen p-6`}>
       
       {/* Título */}
-      <h1 className={`text-6xl font-extrabold text-center mb-6 
-        ${darkMode 
-          ? "bg-gradient-to-b from-red-600 to-black [text-shadow:2px_2px_0_white]" 
-          : "bg-gradient-to-b from-red-600 to-white [text-shadow:2px_2px_0_black]"} 
-        bg-clip-text text-transparent drop-shadow-lg`}>
-        Mi Pokédex
-      </h1>
+      <h1
+  className={`${luckiestGuy.className} text-7xl text-center mb-8 font-bold tracking-wide
+    text-yellow-400 drop-shadow-[3px_3px_0_rgba(0,0,0,0.6)]
+    [text-shadow:3px_3px_0_#0033a0,6px_6px_0_#000]`}
+>
+  Mi Pokédex
+</h1>
+
 
       {/* Estadísticas */}
       <div className="flex justify-center gap-10 mb-8">
