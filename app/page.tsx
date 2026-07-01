@@ -71,7 +71,6 @@ export default function Home() {
   function applyFilterAndSort(filterType: FilterType, order: SortOrder, query: string = "") {
     let result = list;
 
-    // Aplicar filtro
     if (filterType === "captured") {
       result = list.filter((item) => {
         const id = item.url.split("/").at(-2)!;
@@ -84,14 +83,12 @@ export default function Home() {
       });
     }
 
-    // Aplicar búsqueda
     if (query) {
       result = result.filter((item) => 
         item.name.toLowerCase().includes(query.toLowerCase())
       );
     }
 
-    // Aplicar orden
     result = [...result].sort((a, b) => {
       const idA = parseInt(a.url.split("/").at(-2)!);
       const idB = parseInt(b.url.split("/").at(-2)!);
@@ -174,26 +171,26 @@ export default function Home() {
 
         {/* ESTADÍSTICAS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-2xl mx-auto">
-          <div className={`${darkMode ? "bg-gray-800/80 border-cyan-500/30" : "bg-white/80 border-blue-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300`}>
+          <div className={`${darkMode ? "bg-gray-800/80 border-cyan-500/30" : "bg-white/80 border-blue-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
             <div className="flex items-center justify-center gap-2 mb-2">
               <FaCheckCircle className={`${darkMode ? "text-cyan-400" : "text-blue-600"} text-xl`} />
               <p className={`text-sm font-bold uppercase tracking-wider ${darkMode ? "text-cyan-400" : "text-blue-600"}`}>
                 Atrapados
               </p>
             </div>
-            <p className={`text-3xl font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <p className={`text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
               {capturedCount}
             </p>
           </div>
 
-          <div className={`${darkMode ? "bg-gray-800/80 border-yellow-500/30" : "bg-white/80 border-yellow-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300`}>
+          <div className={`${darkMode ? "bg-gray-800/80 border-yellow-500/30" : "bg-white/80 border-yellow-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
             <div className="flex items-center justify-center gap-2 mb-2">
               <FaStar className={`${darkMode ? "text-yellow-400" : "text-yellow-500"} text-xl`} />
               <p className={`text-sm font-bold uppercase tracking-wider ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}>
                 Favoritos
               </p>
             </div>
-            <p className={`text-3xl font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <p className={`text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
               {favoritesCount}
             </p>
           </div>
@@ -320,22 +317,8 @@ export default function Home() {
                     darkMode
                       ? "bg-gray-800/80 backdrop-blur-md border-gray-700 hover:border-cyan-500 hover:shadow-xl hover:shadow-cyan-500/20"
                       : "bg-white/80 backdrop-blur-md border-gray-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/20"
-                  } ${isCaptured ? (darkMode ? "ring-2 ring-green-500/50" : "ring-2 ring-green-400/50") : ""} ${isFavorite ? (darkMode ? "ring-2 ring-yellow-500/50" : "ring-2 ring-yellow-400/50") : ""}`}
+                  }`}
                 >
-                  {/* Badges de estado */}
-                  <div className="absolute top-2 right-2 flex flex-col gap-1">
-                    {isCaptured && (
-                      <div className="bg-green-500 text-white rounded-full p-1 shadow-lg">
-                        <FaCheckCircle className="w-3 h-3" />
-                      </div>
-                    )}
-                    {isFavorite && (
-                      <div className="bg-yellow-400 text-white rounded-full p-1 shadow-lg">
-                        <FaStar className="w-3 h-3" />
-                      </div>
-                    )}
-                  </div>
-
                   <Link href={`/pokemon/${item.name}`} className="block cursor-pointer">
                     <div>
                       <div className={`text-xs font-bold mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
