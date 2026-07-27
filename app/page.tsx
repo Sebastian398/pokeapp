@@ -206,7 +206,7 @@ export default function Home() {
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Buscar Pokémon por nombre..."
-              className={`w-full pl-12 pr-4 py-4 rounded-2xl border-2 ${
+              className={`w-full pl-12 pr-4 py-3 rounded-2xl border-2 ${
                 darkMode 
                   ? "bg-gray-800/80 border-gray-700 text-white placeholder-gray-500 focus:border-cyan-500" 
                   : "bg-white/80 border-gray-300 text-gray-900 placeholder-gray-400 focus:border-blue-500"
@@ -215,7 +215,7 @@ export default function Home() {
           </div>
 
           {/* Filtros y orden */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             <button
               onClick={() => handleFilter("all")}
               className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 ${
