@@ -155,9 +155,9 @@ export default function Home() {
       <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         
         {/* HEADER */}
-        <header className="text-center mb-8">
+        <header className="text-center mb-6 sm:mb-8">
           <h1
-            className={`${luckiestGuy.className} text-6xl sm:text-7xl lg:text-8xl mb-3 font-bold tracking-wide
+            className={`${luckiestGuy.className} text-5xl sm:text-6xl lg:text-8xl mb-2 sm:mb-3 font-bold tracking-wide
               ${darkMode 
                 ? "text-yellow-400 drop-shadow-[3px_3px_0_rgba(0,0,0,0.8)] [text-shadow:3px_3px_0_#0033a0,6px_6px_0_#000]" 
                 : "text-yellow-500 drop-shadow-[3px_3px_0_rgba(0,0,0,0.3)] [text-shadow:3px_3px_0_#0033a0,6px_6px_0_rgba(0,0,0,0.2)]"}`}
@@ -169,35 +169,35 @@ export default function Home() {
           </p>
         </header>
 
-        {/* ESTADÍSTICAS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-2xl mx-auto">
-          <div className={`${darkMode ? "bg-gray-800/80 border-cyan-500/30" : "bg-white/80 border-blue-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <FaCheckCircle className={`${darkMode ? "text-cyan-400" : "text-blue-600"} text-xl`} />
-              <p className={`text-sm font-bold uppercase tracking-wider ${darkMode ? "text-cyan-400" : "text-blue-600"}`}>
+        {/* ESTADÍSTICAS (Ahora en 2 columnas siempre) */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-2xl mx-auto">
+          <div className={`${darkMode ? "bg-gray-800/80 border-cyan-500/30" : "bg-white/80 border-blue-300"} backdrop-blur-md border-2 rounded-2xl p-3 sm:p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
+            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+              <FaCheckCircle className={`${darkMode ? "text-cyan-400" : "text-blue-600"} text-lg sm:text-xl`} />
+              <p className={`text-[10px] sm:text-sm font-bold uppercase tracking-wider ${darkMode ? "text-cyan-400" : "text-blue-600"}`}>
                 Atrapados
               </p>
             </div>
-            <p className={`text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <p className={`text-2xl sm:text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
               {capturedCount}
             </p>
           </div>
 
-          <div className={`${darkMode ? "bg-gray-800/80 border-yellow-500/30" : "bg-white/80 border-yellow-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <FaStar className={`${darkMode ? "text-yellow-400" : "text-yellow-500"} text-xl`} />
-              <p className={`text-sm font-bold uppercase tracking-wider ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}>
+          <div className={`${darkMode ? "bg-gray-800/80 border-yellow-500/30" : "bg-white/80 border-yellow-300"} backdrop-blur-md border-2 rounded-2xl p-3 sm:p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
+            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+              <FaStar className={`${darkMode ? "text-yellow-400" : "text-yellow-500"} text-lg sm:text-xl`} />
+              <p className={`text-[10px] sm:text-sm font-bold uppercase tracking-wider ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}>
                 Favoritos
               </p>
             </div>
-            <p className={`text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <p className={`text-2xl sm:text-3xl font-extrabold text-center ${darkMode ? "text-white" : "text-gray-900"}`}>
               {favoritesCount}
             </p>
           </div>
         </div>
 
         {/* BARRA DE BÚSQUEDA Y FILTROS */}
-        <div className="max-w-4xl mx-auto mb-8 space-y-4">
+        <div className="max-w-4xl mx-auto mb-6 sm:mb-8 space-y-4">
           {/* Búsqueda */}
           <div className="relative">
             <FaSearch className={`absolute left-4 top-1/2 -translate-y-1/2 ${darkMode ? "text-gray-400" : "text-gray-500"} text-lg`} />
@@ -205,20 +205,20 @@ export default function Home() {
               type="text"
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Buscar Pokémon por nombre..."
-              className={`w-full pl-12 pr-4 py-4 rounded-2xl border-2 ${
+              placeholder="Buscar Pokémon..."
+              className={`w-full pl-12 pr-4 py-3 sm:py-4 rounded-2xl border-2 ${
                 darkMode 
                   ? "bg-gray-800/80 border-gray-700 text-white placeholder-gray-500 focus:border-cyan-500" 
                   : "bg-white/80 border-gray-300 text-gray-900 placeholder-gray-400 focus:border-blue-500"
-              } backdrop-blur-md shadow-lg focus:outline-none focus:ring-4 ${darkMode ? "focus:ring-cyan-500/20" : "focus:ring-blue-500/20"} transition-all duration-300 text-base`}
+              } backdrop-blur-md shadow-lg focus:outline-none focus:ring-4 ${darkMode ? "focus:ring-cyan-500/20" : "focus:ring-blue-500/20"} transition-all duration-300 text-sm sm:text-base`}
             />
           </div>
 
           {/* Filtros y orden */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             <button
               onClick={() => handleFilter("all")}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 ${
+              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 ${
                 activeFilter === "all"
                   ? darkMode
                     ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-cyan-500/50"
@@ -232,7 +232,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => handleFilter("captured")}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-2 ${
+              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-1 sm:gap-2 ${
                 activeFilter === "captured"
                   ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-500/50"
                   : darkMode
@@ -240,12 +240,13 @@ export default function Home() {
                   : "bg-white text-gray-700 border border-gray-300 hover:border-green-500"
               }`}
             >
-              <FaCheckCircle className="text-xs" />
-              Atrapados
+              <FaCheckCircle className="text-[10px] sm:text-xs" />
+              <span className="hidden sm:inline">Atrapados</span>
+              <span className="sm:hidden">Atrap.</span>
             </button>
             <button
               onClick={() => handleFilter("favorites")}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-2 ${
+              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-1 sm:gap-2 ${
                 activeFilter === "favorites"
                   ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-white shadow-yellow-500/50"
                   : darkMode
@@ -253,14 +254,15 @@ export default function Home() {
                   : "bg-white text-gray-700 border border-gray-300 hover:border-yellow-500"
               }`}
             >
-              <FaStar className="text-xs" />
-              Favoritos
+              <FaStar className="text-[10px] sm:text-xs" />
+              <span className="hidden sm:inline">Favoritos</span>
+              <span className="sm:hidden">Fav.</span>
             </button>
 
             {/* Botón de orden */}
             <button
               onClick={handleSort}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-2 ${
+              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 flex items-center gap-1 sm:gap-2 ${
                 darkMode
                   ? "bg-gray-800 text-gray-300 border border-gray-700 hover:border-purple-500 hover:text-purple-400"
                   : "bg-white text-gray-700 border border-gray-300 hover:border-purple-500 hover:text-purple-600"
@@ -269,13 +271,15 @@ export default function Home() {
             >
               {sortOrder === "asc" ? (
                 <>
-                  <FaSortAmountDown className="text-xs" />
-                  <span>Ascendente</span>
+                  <FaSortAmountDown className="text-[10px] sm:text-xs" />
+                  <span className="hidden sm:inline">Ascendente</span>
+                  <span className="sm:hidden">Asc.</span>
                 </>
               ) : (
                 <>
-                  <FaSortAmountUp className="text-xs" />
-                  <span>Descendente</span>
+                  <FaSortAmountUp className="text-[10px] sm:text-xs" />
+                  <span className="hidden sm:inline">Descendente</span>
+                  <span className="sm:hidden">Desc.</span>
                 </>
               )}
             </button>
@@ -289,14 +293,14 @@ export default function Home() {
               <img
                 src="/pokebola3.png"
                 alt="Cargando"
-                className="w-20 h-20 animate-spin"
+                className="w-16 h-16 sm:w-20 sm:h-20 animate-spin"
               />
             </div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-lg font-medium`}>
+            <div className="text-5xl sm:text-6xl mb-4">🔍</div>
+            <p className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-base sm:text-lg font-medium`}>
               No se encontraron Pokémon
             </p>
             <p className={`${darkMode ? "text-gray-500" : "text-gray-500"} text-sm mt-2`}>
@@ -304,7 +308,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6">
             {filtered.map((item) => {
               const id = item.url.split("/").at(-2)!;
               const isCaptured = !!collection.captured[id];
@@ -313,7 +317,7 @@ export default function Home() {
               return (
                 <li
                   key={item.name}
-                  className={`group relative rounded-3xl p-4 text-center border-2 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 ${
+                  className={`group relative rounded-2xl sm:rounded-3xl p-3 sm:p-4 text-center border-2 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 ${
                     darkMode
                       ? "bg-gray-800/80 backdrop-blur-md border-gray-700 hover:border-cyan-500 hover:shadow-xl hover:shadow-cyan-500/20"
                       : "bg-white/80 backdrop-blur-md border-gray-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/20"
@@ -321,36 +325,36 @@ export default function Home() {
                 >
                   <Link href={`/pokemon/${item.name}`} className="block cursor-pointer">
                     <div>
-                      <div className={`text-xs font-bold mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                      <div className={`text-[10px] sm:text-xs font-bold mb-1 sm:mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
                         #{id.padStart(3, "0")}
                       </div>
                       
                       {/* Imagen con fondo circular */}
-                      <div className="relative mb-3">
+                      <div className="relative mb-2 sm:mb-3">
                         <div className={`absolute inset-0 ${darkMode ? "bg-gradient-to-br from-cyan-500/10 to-purple-500/10" : "bg-gradient-to-br from-blue-200/30 to-purple-200/30"} rounded-full blur-xl scale-110 group-hover:scale-125 transition-transform duration-300`} />
                         <img
                           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
                           alt={item.name}
-                          className="relative w-28 h-28 mx-auto object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
+                          className="relative w-20 h-20 sm:w-28 sm:h-28 mx-auto object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
                           loading="lazy"
                         />
                       </div>
 
-                      <p className={`font-bold text-base capitalize ${darkMode ? "text-white" : "text-gray-900"} group-hover:${darkMode ? "text-cyan-400" : "text-blue-600"} transition-colors duration-300`}>
+                      <p className={`font-bold text-xs sm:text-base capitalize ${darkMode ? "text-white" : "text-gray-900"} group-hover:${darkMode ? "text-cyan-400" : "text-blue-600"} transition-colors duration-300`}>
                         {item.name}
                       </p>
                     </div>
                   </Link>
 
                   {/* Botones de acción */}
-                  <div className="flex justify-center gap-3 mt-3 pt-3 border-t border-gray-200/20">
+                  <div className="flex justify-center gap-2 sm:gap-3 mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200/20">
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         toggleCaptured(id, isCaptured);
                       }}
-                      className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
+                      className={`p-1.5 sm:p-2 rounded-full transition-all duration-300 hover:scale-110 ${
                         isCaptured
                           ? "bg-green-500 text-white shadow-lg shadow-green-500/50"
                           : darkMode
@@ -359,7 +363,7 @@ export default function Home() {
                       }`}
                       title={isCaptured ? "Desmarcar como atrapado" : "Marcar como atrapado"}
                     >
-                      <FaCheckCircle className="w-4 h-4" />
+                      <FaCheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
 
                     <button
@@ -368,7 +372,7 @@ export default function Home() {
                         e.stopPropagation();
                         toggleFavorite(id, isFavorite);
                       }}
-                      className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
+                      className={`p-1.5 sm:p-2 rounded-full transition-all duration-300 hover:scale-110 ${
                         isFavorite
                           ? "bg-yellow-400 text-white shadow-lg shadow-yellow-400/50"
                           : darkMode
@@ -378,9 +382,9 @@ export default function Home() {
                       title={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
                     >
                       {isFavorite ? (
-                        <FaStar className="w-4 h-4" />
+                        <FaStar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       ) : (
-                        <FaRegStar className="w-4 h-4" />
+                        <FaRegStar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       )}
                     </button>
                   </div>
@@ -392,17 +396,17 @@ export default function Home() {
       </div>
 
       {/* BOTÓN FLOTANTE CON MENÚ */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         {!menuOpen && (
           <button
             id="menu-button"
             onClick={() => setMenuOpen(true)}
-            className="rounded-full w-16 h-16 flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+            className="rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-all duration-300 hover:scale-110 group"
           >
             <img
               src="/pokebola3.png"
               alt="Pokébola"
-              className="w-14 h-14 object-contain drop-shadow-lg group-hover:drop-shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-all duration-300"
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain drop-shadow-lg group-hover:drop-shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-all duration-300"
             />
           </button>
         )}
@@ -410,7 +414,7 @@ export default function Home() {
         {menuOpen && (
           <div
             id="floating-menu"
-            className={`rounded-2xl p-4 w-72 shadow-2xl border-2 transition-all duration-300 ${
+            className={`rounded-2xl p-4 w-64 sm:w-72 shadow-2xl border-2 transition-all duration-300 ${
               darkMode
                 ? "bg-gray-800/95 backdrop-blur-md border-cyan-500/50 text-white"
                 : "bg-white/95 backdrop-blur-md border-blue-500/50 text-gray-900"
@@ -419,25 +423,25 @@ export default function Home() {
             <div className="space-y-2">
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-300 ${
+                className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-300 text-sm sm:text-base ${
                   darkMode
                     ? "hover:bg-gray-700 hover:text-cyan-400"
                     : "hover:bg-gray-100 hover:text-blue-600"
                 }`}
               >
-                {darkMode ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-600" />}
+                {darkMode ? <FaSun className="text-yellow-400 text-base sm:text-lg" /> : <FaMoon className="text-gray-600 text-base sm:text-lg" />}
                 <span className="font-medium">{darkMode ? "Modo Claro" : "Modo Oscuro"}</span>
               </button>
 
               <button
                 onClick={handleDaily}
-                className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl transition-all duration-300 ${
+                className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-300 text-sm sm:text-base ${
                   darkMode
                     ? "hover:bg-gray-700 hover:text-cyan-400"
                     : "hover:bg-gray-100 hover:text-blue-600"
                 }`}
               >
-                <FaCalendarDay className={`${darkMode ? "text-purple-400" : "text-purple-600"}`} />
+                <FaCalendarDay className={`${darkMode ? "text-purple-400" : "text-purple-600"} text-base sm:text-lg`} />
                 <span className="font-medium">Pokémon del día</span>
               </button>
             </div>
