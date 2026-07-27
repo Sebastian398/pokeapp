@@ -43,7 +43,7 @@ const typeBadgeColors: Record<string, string> = {
 
 const defaultTheme = typeThemes.normal;
 
-// 🎨 Colores de las barras de stats según el valor (5 niveles)
+// Colores de las barras de stats según el valor (5 niveles)
 function getStatBarColor(value: number): string {
   if (value <= 40) return "bg-gradient-to-r from-rose-500 via-red-500 to-red-600";
   if (value <= 69) return "bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500";

@@ -18,12 +18,16 @@ export default function ItemsDexPage() {
   const [darkMode, setDarkMode] = useState(true);
   const [isThemeLoaded, setIsThemeLoaded] = useState(false); // 🔧 Nuevo estado
 
+  // setTimeout evita el "cascading render"
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
-    if (saved !== null) {
-      setDarkMode(saved === "true");
-    }
-    setIsThemeLoaded(true); // 🔧 Activa transiciones solo después de leer
+    const timer = setTimeout(() => {
+      if (saved !== null) {
+        setDarkMode(saved === "true");
+      }
+      setIsThemeLoaded(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -108,7 +112,7 @@ export default function ItemsDexPage() {
         {loading ? (
           <div className="flex flex-col justify-center items-center py-20 gap-4">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent"></div>
-            <p className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-sm`}>Cargando todos los objetos...</p>
+            <p className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-sm`}>Cargando objetos...</p>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="text-center py-20">
