@@ -170,7 +170,7 @@ export default function Home() {
         </header>
 
         {/* ESTADÍSTICAS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-2xl mx-auto">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-2xl mx-auto">
           <div className={`${darkMode ? "bg-gray-800/80 border-cyan-500/30" : "bg-white/80 border-blue-300"} backdrop-blur-md border-2 rounded-2xl p-4 shadow-lg hover:scale-105 transition-transform duration-300 text-center`}>
             <div className="flex items-center justify-center gap-2 mb-2">
               <FaCheckCircle className={`${darkMode ? "text-cyan-400" : "text-blue-600"} text-xl`} />
