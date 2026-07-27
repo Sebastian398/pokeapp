@@ -197,7 +197,7 @@ export default function Home() {
         </div>
 
         {/* BARRA DE BÚSQUEDA Y FILTROS */}
-        <div className="max-w-4xl mx-auto mb-8 space-y-4">
+        <div className="max-w-4xl mx-auto mb-6 sm:mb-8 space-y-4">
           {/* Búsqueda */}
           <div className="relative">
             <FaSearch className={`absolute left-4 top-1/2 -translate-y-1/2 ${darkMode ? "text-gray-400" : "text-gray-500"} text-lg`} />
